@@ -1,0 +1,93 @@
+# syntax=docker/dockerfile:1
+
+#define base docker image
+FROM openjdk:17
+LABEL maintainer="vibhooti.net"
+ADD target/Springboot_Dockerization-0.0.1-SNAPSHOT.jar Springboot_Dockerization.jar
+ENTRYPOINT ["java", "-jar", "Springboot_Dockerization.jar"]
+
+
+#FROM openjdk:17.0.1-jdk-alpine as build
+#RUN mkdir -p /app
+#WORKDIR /app
+#COPY . ./
+#LABEL maintainer="vibhooti.net"
+
+
+#FROM alpine:latest
+#COPY --from=build /app /app
+#ADD target/Springboot_Dockerization-0.0.1-SNAPSHOT.jar Springboot_Dockerization.jar
+#ENTRYPOINT ["java", "-jar", "Springboot_Dockerization.jar"]
+
+
+
+
+# tells Docker what base image we would like to use for our application
+# Docker images can be inherited from other images. For this guide, 
+# we use the official openjdk image from Docker Hub
+#FROM openjdk:17-alpine3.13
+
+# set the image’s working directory
+#WORKDIR /app
+
+# get the Maven wrapper and our pom.xml file into our image
+#COPY .mvn/ .mvn
+#COPY mvnw pom.xml ./
+
+# dependencies will be installed into the image
+#RUN ./mvnw dependency:go-offline
+
+# add our source code into the image
+#COPY src ./src
+
+# tell Docker what command we want to run when our image is executed inside a container
+#CMD ["./mvnw", "spring-boot:run"]
+
+
+
+#FROM openjdk:17-alpine3.13 as base
+
+#WORKDIR /app
+
+#COPY .mvn/ .mvn
+#COPY mvnw pom.xml ./
+#RUN ./mvnw dependency:go-offline
+#COPY src ./src
+
+#FROM base as test
+# CMD statement is not executed during the building of the image, but is executed when you run the image in a container
+# CMD ["./mvnw", "test"]
+#RUN ["./mvnw", "test"]
+
+#FROM base as development
+#CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.profiles=mysql", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000'"]
+
+#FROM base as build
+#RUN ./mvnw package
+
+# don’t need a large image with all the development dependencies to run your application in production. 
+# Limiting the number of dependencies in production images can significantly limit the attack surface
+#FROM openjdk:11-jre-slim as production
+#EXPOSE 8080
+
+#COPY --from=build /app/target/Springboot_Dockerization-*.jar /Springboot_Dockerization.jar
+
+#CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/Springboot_Dockerization.jar"]
+
+
+
+
+#FROM openjdk:17-alpine3.13 as base
+#WORKDIR /app
+#COPY .mvn/ .mvn
+#COPY mvnw pom.xml ./
+#RUN ./mvnw dependency:go-offline
+#COPY src ./src
+
+#FROM base as build
+#RUN ./mvnw package
+
+#FROM openjdk:11-jre-slim as production
+#COPY --from=build /app/target/Springboot_Dockerization-*.jar /Springboot_Dockerization.jar
+#CMD ["./mvnw", "spring-boot:run"]
+#CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/Springboot_Dockerization.jar"]
